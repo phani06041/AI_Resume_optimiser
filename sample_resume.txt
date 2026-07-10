@@ -1,0 +1,11 @@
+Alex Sterling
+Senior Product Designer
+
+EXPERIENCE
+Quantam Dynamics - Senior Designer (2020 - Present)
+- Spearheaded the design of an AI-driven analytics dashboard that increased user retention by 45%.
+- Implemented glassmorphic design systems that reduced cognitive load.
+- Collaborated closely with engineering teams to ensure pixel-perfect deployment.
+
+SKILLS
+User Research, Visual Design, Prototyping, Design Systems, Agile Workflow, Figma
