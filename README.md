@@ -8,21 +8,15 @@ A premium, state-of-the-art Single Page Web Application (SPA) designed to parse,
 
 ## 🎨 Preview & Interface Showcases
 
-### 1. Cyber Dark Dashboard
-An immersive, frosted dark glassmorphic UI with vibrant violet and emerald highlights, rounded dashes, and high-fidelity hovering icons.
-![Dashboard UI](./screenshots/dashboard_dark.png)
+<p align="center">
+  <img src="./screenshots/dashboard_dark.png" width="49%" alt="Cyber Dark Dashboard" />
+  <img src="./screenshots/analysis.png" width="49%" alt="Holographic Scanner & Analysis" />
+</p>
 
-### 2. Holographic Scanner & Analysis
-A premium holographic laser document scanner displaying real-time keyword overlap tags and circular SVG progress matching meters.
-![Analysis & Scanner](./screenshots/analysis.png)
-
-### 3. Integrated AI Career Coach
-A slide-out conversation assistant panel featuring translucent message bubbles and direct context integration.
-![Chatbot Drawer](./screenshots/chatbot.png)
-
-### 4. VS Code Monospace Editor
-Interactive cover letter and resume previewers styled with Mac window control dots, code typography, and custom scrollbars.
-![Monospace Editors](./screenshots/editor_premium.png)
+<p align="center">
+  <img src="./screenshots/chatbot.png" width="49%" alt="Integrated AI Career Coach" />
+  <img src="./screenshots/editor_premium.png" width="49%" alt="VS Code Monospace Editor" />
+</p>
 
 ---
 
