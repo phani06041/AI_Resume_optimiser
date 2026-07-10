@@ -231,6 +231,7 @@ dom.clearKeyBtn.addEventListener("click", () => {
 // Run settings initializer
 initSettings();
 updateAtsScore(state.currentScore);
+preloadRoasterIframe();
 
 // ==================== PROFILE DROPDOWN MANAGEMENT ====================
 
@@ -481,9 +482,23 @@ function handleSelectedFile(file) {
   }
 
   state.resumeFile = file;
+  state.resumeFileName = fileName;
   dom.uploadStatusText.innerHTML = `<span style="color: var(--primary); font-weight: 600;">${fileName}</span>`;
-  dom.uploadSubtext.textContent = "File selected. Ready to optimize.";
-  showToast("Resume uploaded successfully!");
+  dom.uploadSubtext.textContent = "Parsing resume text...";
+  
+  // Parse immediately on selection to make both roaster and optimizer actions instant
+  parseResumeFile(file).then(text => {
+    state.resumeText = text;
+    dom.uploadSubtext.textContent = "File selected. Ready to optimize.";
+    showToast("Resume uploaded and parsed successfully!");
+    
+    // Sync immediately to preloaded iframe
+    syncResumeToRoaster();
+  }).catch(err => {
+    console.error("Resume parsing error: ", err);
+    dom.uploadSubtext.textContent = "Error parsing file text. Try uploading plain text.";
+    showToast("Failed to parse resume text.");
+  });
 }
 
 // ==================== REAL-TIME MULTI-PROVIDER AI CHECKER ====================
@@ -1362,6 +1377,66 @@ dom.chatInput.addEventListener("keydown", (e) => {
 
 // ==================== AI RESUME ROASTER ====================
 
+// Pre-load the Resume Roaster iframe in the background for instant navigation
+function preloadRoasterIframe() {
+  const targetUrl = ROASTER_CONFIG.hostedUrl ? ROASTER_CONFIG.hostedUrl.trim() : "";
+  if (targetUrl && targetUrl !== "https://github.com" && targetUrl !== "" && !targetUrl.includes("PLACEHOLDER")) {
+    if (dom.roasterIframe) {
+      dom.roasterIframe.src = targetUrl;
+    }
+  }
+}
+
+// Post current state (resume name, content, target job desc) to the Vercel roaster iframe
+function syncResumeToRoaster() {
+  if (!dom.roasterIframe || !dom.roasterIframe.contentWindow) return;
+  
+  const payload = {
+    source: "resume-optimizer",
+    type: "LOAD_RESUME",
+    resumeText: state.resumeText || "",
+    fileName: state.resumeFileName || (state.resumeFile ? state.resumeFile.name : "resume.pdf"),
+    fileSize: state.resumeFile ? state.resumeFile.size : 0,
+    jobDescription: dom.jobInput ? dom.jobInput.value.trim() : ""
+  };
+  
+  dom.roasterIframe.contentWindow.postMessage(payload, "*");
+}
+
+// Listen to incoming messages from the Vercel Resume Roaster
+window.addEventListener("message", (event) => {
+  const configuredUrl = ROASTER_CONFIG.hostedUrl ? ROASTER_CONFIG.hostedUrl.trim() : "";
+  if (!configuredUrl) return;
+  
+  // Verify message identifier
+  if (!event.data || event.data.source !== "resume-roaster") return;
+  
+  const { type, resumeText, fileName, jobDescription } = event.data;
+  
+  if (type === "SHARE_RESUME_DATA") {
+    if (resumeText) {
+      state.resumeText = resumeText;
+      state.resumeFileName = fileName || "resume_from_roaster.txt";
+      
+      // Update parent file selectors
+      if (dom.uploadStatusText) {
+        dom.uploadStatusText.innerHTML = `<span style="color: var(--primary); font-weight: 600;">${state.resumeFileName}</span>`;
+      }
+      if (dom.uploadSubtext) {
+        dom.uploadSubtext.textContent = "Ready to optimize (Synced from Roaster).";
+      }
+      // Create a mock local file representation
+      state.resumeFile = new File([resumeText], state.resumeFileName, { type: "text/plain" });
+    }
+    
+    if (jobDescription && dom.jobInput) {
+      dom.jobInput.value = jobDescription;
+    }
+    
+    showToast("Resume data synchronized from Roaster!");
+  }
+});
+
 dom.roastTriggerBtn.addEventListener("click", () => {
   // 1. Navigate to Roaster Screen
   switchView("roaster");
@@ -1398,21 +1473,19 @@ dom.roastTriggerBtn.addEventListener("click", () => {
   if (devMsg) devMsg.style.display = "none";
   dom.roasterIframe.style.display = "block";
 
-  // 2. Reset and show loader
-  dom.roasterIframeLoader.style.display = "flex";
-  
-  // 3. Set iframe src to the developer configured URL
-  if (dom.roasterIframe.src !== targetUrl) {
+  // 2. Set src if not loaded yet, otherwise sync immediately
+  if (dom.roasterIframe.src !== targetUrl && !dom.roasterIframe.src.includes(targetUrl)) {
+    dom.roasterIframeLoader.style.display = "flex";
     dom.roasterIframe.src = targetUrl;
+    dom.roasterIframe.onload = () => {
+      dom.roasterIframeLoader.style.display = "none";
+      syncResumeToRoaster();
+    };
   } else {
-    // If already loaded, hide the loader immediately
+    // If already preloaded, hide the loader immediately and trigger sync
     dom.roasterIframeLoader.style.display = "none";
+    syncResumeToRoaster();
   }
-
-  // 4. Register onload event to dismiss spinner
-  dom.roasterIframe.onload = () => {
-    dom.roasterIframeLoader.style.display = "none";
-  };
 });
 
 // Back navigation listener
