@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Resume Pro - Optimize Your Career</title>
+  
+  <!-- Stylesheets -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- PDF & DOCX Parsing Libraries (Client-side) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+  <script type="module" crossorigin src="/AI_Resume_optimiser/assets/index-CWhrbbTE.js"></script>
+  <link rel="stylesheet" crossorigin href="/AI_Resume_optimiser/assets/index-CCz_T9TZ.css">
+</head>
+<body>
+
+  <!-- Background Animated blobs -->
+  <div class="bg-blobs"></div>
+
+  <!-- Top App Bar -->
+  <header class="app-bar">
+    <div class="logo-container" id="logo-btn">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+      <h1>AI Resume Pro</h1>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active" data-target="optimize">Dashboard</a>
+      <a href="#" class="nav-link" data-target="analysis" id="nav-link-analysis" style="display:none;">Analysis</a>
+      <a href="#" class="nav-link" data-target="tools">Tools</a>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px; position: relative;">
+      <!-- API Key Status Badge & Settings Toggle -->
+      <button class="settings-toggle-btn" id="profile-btn" title="Gemini API Settings">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-sm" style="font-weight: 600; text-transform: uppercase; font-size: 0.688rem; color: var(--primary);">API Key</span>
+        <span class="key-status-dot unconfigured" id="key-status-dot"></span>
+      </button>
+      
+      <div class="avatar-container" id="avatar-btn" style="cursor: pointer;">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPcMPl9hcDsdF6iFTF9Q0Pt3mRTfOTpz3xxJje26LckKKYJv_RNMsCZGuU0ivRTIL--MhTK1PKqYQe6OoKa6gX8cuakkzh-R21WbZK4ve_w_dJYqgHSSqNzSKya-sGQLh30hiB8Cy3sOV07kyQ1NJBuof_-mprXQ_SIk9ks91UCle4wSk9Z4V1dM42mv2Lo3-Y-gBw38sPAqcc9nU6_X5vtOZSkWB-iYnfGW6i-9N369PD_zzF8cPQgyiyUk202X73accMp-aGcW4" alt="User Profile Picture"/>
+      </div>
+
+      <!-- Profile Dropdown Card -->
+      <div class="profile-dropdown glass-card" id="profile-dropdown">
+        <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(53, 37, 205, 0.08); padding-bottom: 12px; margin-bottom: 12px;">
+          <div class="avatar-container" style="width: 40px; height: 40px; cursor: default; flex-shrink: 0;">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPcMPl9hcDsdF6iFTF9Q0Pt3mRTfOTpz3xxJje26LckKKYJv_RNMsCZGuU0ivRTIL--MhTK1PKqYQe6OoKa6gX8cuakkzh-R21WbZK4ve_w_dJYqgHSSqNzSKya-sGQLh30hiB8Cy3sOV07kyQ1NJBuof_-mprXQ_SIk9ks91UCle4wSk9Z4V1dM42mv2Lo3-Y-gBw38sPAqcc9nU6_X5vtOZSkWB-iYnfGW6i-9N369PD_zzF8cPQgyiyUk202X73accMp-aGcW4" />
+          </div>
+          <div>
+            <h4 style="font-size: 0.875rem; font-weight: 700; color: var(--on-surface);">Alex Sterling</h4>
+            <p class="font-label-sm" style="color: var(--outline); font-size: 0.688rem; text-transform: none; font-weight: 400;">alex.sterling@nexus.design</p>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div class="profile-dropdown-item" id="dropdown-proplan-trigger">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary);">workspace_premium</span>
+            <span class="font-label-sm" style="color: var(--on-surface-variant); font-weight: 500; font-size: 0.75rem; text-transform: none;">Premium Pro Plan</span>
+          </div>
+          <div class="profile-dropdown-item" id="dropdown-settings-trigger">
+            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--outline);">settings</span>
+            <span class="font-label-sm" style="color: var(--on-surface-variant); font-weight: 500; font-size: 0.75rem; text-transform: none;">API Settings</span>
+          </div>
+          <div class="profile-dropdown-item" style="border-top: 1px solid rgba(53, 37, 205, 0.05); padding-top: 8px; margin-top: 4px; color: var(--error);" id="dropdown-signout-trigger">
+            <span class="material-symbols-outlined" style="font-size: 18px;">logout</span>
+            <span class="font-label-sm" style="font-weight: 600; font-size: 0.75rem; text-transform: none;">Sign Out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Configuration Modal -->
+  <div class="settings-modal" id="settings-modal">
+    <div class="settings-content glass-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 class="font-headline-md" style="font-size: 1.25rem;">AI Service Settings</h3>
+        <button class="btn-secondary" id="close-settings-btn" style="border:none; background:transparent; padding:0; color:var(--on-surface-variant); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <p class="font-body-md text-on-surface-variant" style="margin-bottom: 16px; font-size: 0.875rem;">
+        Configure your preferred AI service. All requests are routed client-side directly from your browser. Keys are saved locally in your browser's private storage.
+      </p>
+
+      <!-- Provider Selector -->
+      <div style="margin-bottom: 20px;">
+        <label class="font-label-sm" style="display: block; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; font-size: 0.688rem; color: var(--outline);">AI Provider</label>
+        <select class="settings-select" id="provider-select">
+          <option value="gemini">Google Gemini</option>
+          <option value="openai">OpenAI ChatGPT</option>
+        </select>
+      </div>
+
+      <!-- Model Selector -->
+      <div style="margin-bottom: 20px;">
+        <label class="font-label-sm" style="display: block; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; font-size: 0.688rem; color: var(--outline);">Model Version</label>
+        <select class="settings-select" id="model-select">
+          <!-- Populated dynamically by app.js -->
+        </select>
+      </div>
+
+      <!-- API Key Field -->
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+        <label class="font-label-sm" id="api-key-label" style="color: var(--primary); font-weight: 600;">GEMINI API KEY</label>
+        <input type="password" id="api-key-input" class="settings-input" placeholder="AIzaSy..."/>
+        <div id="key-status-text" class="font-label-sm" style="color: var(--error); margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 14px;">warning</span> Not Configured
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid rgba(53, 37, 205, 0.08); padding-top: 16px;">
+        <button class="btn-secondary" id="clear-key-btn" style="padding: 10px 16px;">Clear Key</button>
+        <button class="btn-primary" id="save-key-btn" style="padding: 10px 16px;">Save Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+
+  <main class="container">
+
+    <!-- ==================== VIEW 1: OPTIMIZE (HOME) ==================== -->
+    <div class="view-panel active" id="view-optimize">
+      
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-text">
+          <span class="badge-tag font-label-md">Powered by Deep Analysis & ATS Verification</span>
+          <h2 class="font-display-lg">Land your dream job with <span style="color: var(--primary);">precision</span>.</h2>
+          <p class="font-body-lg text-on-surface-variant" style="margin-top: 16px;">
+            Our intelligent AI platform analyzes your resume against target job descriptions. Rank higher in automated recruitment screeners and grab recruiters' attention instantly.
+          </p>
+        </div>
+        <div class="hero-visual">
+          <div class="pulse-bg"></div>
+          <div class="floating-doc">
+            <span class="material-symbols-outlined">description</span>
+            <div class="doc-line-long"></div>
+            <div class="doc-line-short"></div>
+            <div class="doc-line-long"></div>
+          </div>
+          <div class="score-overlay">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+            <span class="font-label-sm" id="dashboard-ats-score">85% ATS Score</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Interaction Bento Grid -->
+      <section class="bento-grid">
+        
+        <!-- Upload Card -->
+        <div class="glass-card bento-card col-span-8" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="card-header">
+            <div>
+              <h3 class="font-headline-md">Upload Resume</h3>
+              <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">PDF, DOCX, or TXT (Max 5MB)</p>
+            </div>
+            <span class="material-symbols-outlined icon-badge">cloud_upload</span>
+          </div>
+          
+          <div class="upload-zone" id="drop-zone">
+            <input type="file" id="file-input" style="display: none;" accept=".pdf,.docx,.txt"/>
+            <div class="upload-icon-container">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+            <p class="font-label-md" id="upload-status-text">Drag and drop file here</p>
+            <p class="font-label-sm text-outline" id="upload-subtext">or click to browse local files</p>
+          </div>
+        </div>
+
+        <!-- Job Description Card -->
+        <div class="glass-card bento-card col-span-4" style="display: flex; flex-direction: column;">
+          <div class="card-header">
+            <div>
+              <h3 class="font-headline-md">Target Job</h3>
+              <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">Paste job requirements</p>
+            </div>
+            <span class="material-symbols-outlined icon-badge">work</span>
+          </div>
+          
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 16px;">
+            <textarea class="job-input" id="job-description-input" placeholder="Paste the job description or role requirements here..."></textarea>
+            <button class="btn-primary" id="optimize-btn">
+              <span>Optimize Now</span>
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Quick Tips Row -->
+        <div class="glass-card tip-card col-span-8" id="tip-card" style="display: flex; flex-direction: column; gap: 16px; align-items: stretch;">
+          <div style="display: flex; flex-direction: column; gap: 16px; justify-content: space-between; align-items: flex-start; width: 100%;" class="md:flex-row md:items-center">
+            <div class="tip-content">
+              <div class="tip-icon">
+                <span class="material-symbols-outlined">tips_and_updates</span>
+              </div>
+              <div>
+                <h4 class="font-label-md">AI Insider Tip</h4>
+                <p class="font-body-md text-on-surface-variant" style="margin-top: 2px;" id="tip-text-content">
+                  Resumes specifying quantified career achievements see a 40% higher recruiter engagement rate.
+                </p>
+              </div>
+            </div>
+            <div class="tip-actions" style="display: flex; gap: 12px; align-self: flex-end;">
+              <button class="btn-secondary" id="see-examples-btn">See Examples</button>
+              <button class="btn-dark" id="dismiss-tip-btn">Dismiss</button>
+            </div>
+          </div>
+          
+          <!-- Slide-down Examples Area (Hidden by default) -->
+          <div id="tip-examples-container" style="display: none; border-top: 1px solid rgba(53, 37, 205, 0.08); padding-top: 16px; animation: slideDown 0.25s ease-out forwards;">
+            <h5 class="font-label-sm" style="color: var(--primary); margin-bottom: 12px; text-transform: uppercase;">Before & After Transformations</h5>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px;" id="tip-examples-cards">
+              <div class="glass-card" style="padding: 12px; background: rgba(186, 26, 26, 0.03); border-color: rgba(186, 26, 26, 0.1); border-radius: var(--radius-md); box-shadow: none;">
+                <div class="font-label-sm" style="color: var(--error); margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">cancel</span> BEFORE (Generic)
+                </div>
+                <p class="font-body-md text-on-surface-variant" style="font-style: italic; font-size: 0.875rem;" id="tip-before-text">
+                  "Responsible for designing and maintaining the design system."
+                </p>
+              </div>
+              <div class="glass-card" style="padding: 12px; background: rgba(0, 108, 73, 0.03); border-color: rgba(0, 108, 73, 0.1); border-radius: var(--radius-md); box-shadow: none;">
+                <div class="font-label-sm" style="color: var(--secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                  <span class="material-symbols-outlined" style="font-size: 16px; font-variation-settings: 'FILL' 1;">check_circle</span> AFTER (Quantified)
+                </div>
+                <p class="font-body-md" style="font-weight: 500; font-size: 0.875rem; color: var(--on-surface);" id="tip-after-text">
+                  "Designed and maintained a centralized Figma design system, reducing design-to-development handoff by <strong>32%</strong> across 4 product lines."
+                </p>
+              </div>
+            </div>
+            <!-- Next Tip Navigation -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 0.75rem; border-top: 1px solid rgba(53, 37, 205, 0.05); padding-top: 12px;">
+              <span style="color: var(--outline); font-family: 'Geist', monospace;" id="tip-index-label">Tip 1 of 3</span>
+              <button class="btn-secondary" id="next-tip-btn" style="padding: 4px 12px; font-size: 0.688rem;">Next Tip</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resume Roaster Card -->
+        <div class="glass-card bento-card col-span-4" id="roaster-card" style="display: flex; flex-direction: column; justify-content: space-between; gap: 16px;">
+          <div class="card-header">
+            <div>
+              <h3 class="font-headline-md">Resume Roaster</h3>
+              <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">Get brutal AI feedback</p>
+            </div>
+            <span class="material-symbols-outlined icon-badge" style="background-color: rgba(245, 158, 11, 0.1); color: var(--tertiary);">local_fire_department</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+            <p class="font-body-md text-on-surface-variant" style="margin-bottom: 16px; font-size: 0.875rem;">
+              Put your profile under the heat. Analyze formatting, structure, and readability instantly.
+            </p>
+            <button class="btn-primary" id="roast-trigger-btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2); width: 100%;">
+              <span>Launch Roaster</span>
+              <span class="material-symbols-outlined">local_fire_department</span>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Recent Optimizations -->
+      <section class="history-section">
+        <div class="history-header">
+          <h3 class="font-headline-md">Recent Optimizations</h3>
+          <button class="btn-secondary" style="border: none; background: transparent; padding: 0; color: var(--primary);" id="view-history-btn">
+            <span class="font-label-md" style="display: inline-flex; align-items: center; gap: 4px;">
+              View History <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </button>
+        </div>
+        
+        <div class="history-grid" id="history-container">
+          <!-- Optimization Item 1 -->
+          <div class="glass-card history-card" data-score="88" data-role="Senior UX Designer" data-company="Google Inc.">
+            <div class="history-meta">
+              <div class="history-icon-box">
+                <span class="material-symbols-outlined">description</span>
+              </div>
+              <div style="text-align: right;">
+                <div class="history-badge success">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span>
+                  <span class="font-label-sm">+14 pts</span>
+                </div>
+                <div class="history-time">2 hours ago</div>
+              </div>
+            </div>
+            <h4 class="font-label-md">Senior UX Designer</h4>
+            <p class="font-body-md text-on-surface-variant">Google Inc.</p>
+            <div class="history-progress-bar">
+              <div class="avatar-stack">
+                <div class="avatar-stack-item">AI</div>
+                <div class="avatar-stack-item" style="background-color: var(--primary-container); color: white;">JD</div>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill success" style="width: 88%;"></div>
+              </div>
+              <span class="font-label-sm">88%</span>
+            </div>
+          </div>
+
+          <!-- Optimization Item 2 -->
+          <div class="glass-card history-card" data-score="74" data-role="Product Manager" data-company="Stripe Financial">
+            <div class="history-meta">
+              <div class="history-icon-box pending">
+                <span class="material-symbols-outlined">description</span>
+              </div>
+              <div style="text-align: right;">
+                <div class="history-badge pending">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span>
+                  <span class="font-label-sm">Optimized</span>
+                </div>
+                <div class="history-time">Yesterday</div>
+              </div>
+            </div>
+            <h4 class="font-label-md">Product Manager</h4>
+            <p class="font-body-md text-on-surface-variant">Stripe Financial</p>
+            <div class="history-progress-bar">
+              <div class="avatar-stack">
+                <div class="avatar-stack-item">AI</div>
+                <div class="avatar-stack-item" style="background-color: var(--primary-container); color: white;">JD</div>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill primary" style="width: 74%;"></div>
+              </div>
+              <span class="font-label-sm">74%</span>
+            </div>
+          </div>
+
+          <!-- History Placeholder / Empty State trigger -->
+          <div class="history-empty" id="empty-state-trigger">
+            <span class="material-symbols-outlined">history</span>
+            <p class="font-label-md">Analyze more resumes to see<br/>detailed trends and insights here.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==================== VIEW 2: ANALYSIS DASHBOARD ==================== -->
+    <div class="view-panel" id="view-analysis">
+      
+      <!-- Action panel back button -->
+      <div style="margin-bottom: 24px;">
+        <button class="btn-secondary" id="back-to-optimize-btn" style="border:none; background:transparent; color: var(--on-surface-variant); padding:0; display: inline-flex; align-items:center; gap: 8px;">
+          <span class="material-symbols-outlined">arrow_back</span>
+          <span class="font-label-md">Back to Optimizer</span>
+        </button>
+      </div>
+
+      <div class="analysis-layout">
+        
+        <!-- Score & Overall Fit -->
+        <div class="analysis-left">
+          
+          <!-- Circle Score Card -->
+          <section class="glass-card score-container">
+            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+              <svg class="ats-radial-svg" viewBox="0 0 160 160">
+                <circle class="ats-radial-bg" cx="80" cy="80" fill="none" r="70" stroke-width="12"></circle>
+                <circle class="ats-radial-fill" id="radial-progress-bar" cx="80" cy="80" fill="none" r="70" stroke-width="12"></circle>
+              </svg>
+              <div class="ats-score-text-box">
+                <span class="ats-score-number" id="analysis-score-val">85%</span>
+                <span class="font-label-sm text-outline" style="text-transform: uppercase;">ATS Score</span>
+              </div>
+            </div>
+            <h2 class="font-headline-md" id="fit-heading" style="margin-top: 16px;">Excellent Fit!</h2>
+            <p class="font-body-md text-on-surface-variant" id="fit-summary-short" style="margin-top: 8px;">
+              Your resume exhibits high alignment with target requirements.
+            </p>
+          </section>
+
+          <!-- Overall Summary Card -->
+          <section class="glass-card" style="margin-top: 24px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+              <span class="material-symbols-outlined" style="color: var(--primary);">analytics</span>
+              <h3 class="font-label-md text-primary" style="text-transform: uppercase;">Overall Fit Summary</h3>
+            </div>
+            <p class="font-body-md" id="analysis-summary-text">
+              The AI scan identified high alignment in technical skills and industry experience. However, there is a minor gap in specialized tool mentions (Figma Plugins) and quantitative impact statements for your latest role.
+            </p>
+            
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 500; margin-bottom: 6px;">
+                  <span class="text-on-surface-variant">Readability</span>
+                  <span class="font-label-sm" style="color: var(--secondary); font-weight: bold;">Optimal</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill success" style="width: 92%;"></div></div>
+              </div>
+              
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 500; margin-bottom: 6px;">
+                  <span class="text-on-surface-variant">Formatting Structure</span>
+                  <span class="font-label-sm" style="color: var(--secondary); font-weight: bold;">Standard</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill success" style="width: 88%;"></div></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Detailed Improvements & Keywords -->
+        <div class="analysis-right">
+          
+          <!-- Keyword Analysis -->
+          <section class="glass-card">
+            <div class="card-header" style="margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="color: var(--primary);">sell</span>
+                <h3 class="font-headline-md">Keyword Analysis</h3>
+              </div>
+              <span class="font-label-sm" id="keyword-count-badge" style="background-color: var(--surface-container-highest); padding: 4px 12px; border-radius: var(--radius-full);">
+                12/15 Found
+              </span>
+            </div>
+
+            <!-- Found Keywords -->
+            <div class="keywords-group">
+              <h4 class="font-label-sm text-on-surface-variant" style="text-transform: uppercase; margin-bottom: 12px;">Found in Resume</h4>
+              <div class="keywords-list" id="found-keywords-list">
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>User Research</span>
+                </div>
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Visual Design</span>
+                </div>
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Prototyping</span>
+                </div>
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Design Systems</span>
+                </div>
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Agile Workflow</span>
+                </div>
+                <div class="keyword-tag found">
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Figma</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Missing Keywords -->
+            <div class="keywords-group" style="margin-bottom: 0;">
+              <h4 class="font-label-sm" style="color: var(--error); text-transform: uppercase; margin-bottom: 12px;">Missing Keywords</h4>
+              <div class="keywords-list" id="missing-keywords-list">
+                <div class="keyword-tag missing" data-keyword="Strategic Thinking">
+                  <span class="material-symbols-outlined">warning</span>
+                  <span>Strategic Thinking</span>
+                </div>
+                <div class="keyword-tag missing" data-keyword="A/B Testing">
+                  <span class="material-symbols-outlined">warning</span>
+                  <span>A/B Testing</span>
+                </div>
+                <div class="keyword-tag missing" data-keyword="Stakeholder Management">
+                  <span class="material-symbols-outlined">warning</span>
+                  <span>Stakeholder Management</span>
+                </div>
+              </div>
+              <button class="btn-secondary" id="keywords-help-btn" style="border:none; background:transparent; padding:0; color:var(--primary); margin-top: 16px; display:inline-flex; align-items:center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 18px;">magic_button</span>
+                <span class="font-label-md">How to integrate these?</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Smart Improvements Card -->
+          <section class="glass-card" style="margin-top: 24px; padding: 0; overflow: hidden;">
+            <div style="background-color: var(--primary); padding: 16px 24px; display: flex; align-items: center; gap: 12px; color: var(--on-primary);">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+              <h3 class="font-headline-md" style="color: white;">Smart Improvements</h3>
+            </div>
+            
+            <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;" id="suggestions-list-container">
+              <!-- Item 1 -->
+              <div class="bullet-fix-box">
+                <div class="bullet-fix-icon">
+                  <span class="material-symbols-outlined">lightbulb</span>
+                </div>
+                <div class="bullet-fix-content">
+                  <p class="font-label-md" style="font-weight: bold; color: var(--on-surface);">Impact Sentence Suggestion</p>
+                  <p class="font-body-md text-on-surface-variant" style="font-style: italic; margin-top: 4px;">
+                    "Spearheaded design for user acquisition funnel, improving conversion rate by 14% through data-driven iterations."
+                  </p>
+                  <span class="bullet-fix-cta" onclick="applySuggestion(1)">Apply this change &rarr;</span>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="bullet-fix-box">
+                <div class="bullet-fix-icon">
+                  <span class="material-symbols-outlined">psychology</span>
+                </div>
+                <div class="bullet-fix-content">
+                  <p class="font-label-md" style="font-weight: bold; color: var(--on-surface);">Experience Gap Fix</p>
+                  <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">
+                    Add a bullet point about your tenure at your latest role explaining your collaboration models in 'Stakeholder Management'.
+                  </p>
+                  <span class="bullet-fix-cta" onclick="applySuggestion(2)">Draft bullet point &rarr;</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== VIEW 3: CAREER TOOLS ==================== -->
+    <div class="view-panel" id="view-tools">
+      
+      <div class="tools-layout">
+        
+        <!-- Sidebar Navigation Tabs -->
+        <div class="tools-sidebar">
+          <div class="glass-card">
+            <h2 class="font-headline-md">Optimization Suite</h2>
+            <p class="font-body-md text-on-surface-variant" style="margin-top: 8px;">
+              Refine your professional documents and social profiles using custom insights compiled by our AI models.
+            </p>
+            <div class="vertical-tabs">
+              <button class="tab-btn active" id="tab-btn-cover" onclick="switchToolsTab('cover')">
+                <span class="material-symbols-outlined">description</span>
+                <span class="font-label-md">Cover Letter</span>
+              </button>
+              <button class="tab-btn" id="tab-btn-linkedin" onclick="switchToolsTab('linkedin')">
+                <span class="material-symbols-outlined">badge</span>
+                <span class="font-label-md">LinkedIn Tips</span>
+              </button>
+              <button class="tab-btn" id="tab-btn-resume" onclick="switchToolsTab('resume')">
+                <span class="material-symbols-outlined">workspace_premium</span>
+                <span class="font-label-md">Optimized Resume</span>
+                <span style="background-color: var(--secondary-container); color: var(--on-secondary-container); font-size: 0.625rem; padding: 2px 6px; border-radius: var(--radius-sm); font-weight: 700; margin-left: auto;">PRO</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Helper mini card -->
+          <div class="glass-card" style="margin-top: 24px; border-color: rgba(0, 108, 73, 0.2); display: flex; align-items: center; gap: 16px;">
+            <div class="bullet-fix-icon" style="background-color: var(--secondary-container); color: var(--on-secondary-container);">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+            </div>
+            <div>
+              <p class="font-label-sm" style="color: var(--secondary);">ATS READINESS</p>
+              <p class="font-headline-md" id="tools-ats-score">85%</p>
+              <div class="progress-track" style="margin-top: 4px; width: 120px;"><div class="progress-fill success" id="tools-progress-fill" style="width: 85%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Dynamic Panel -->
+        <div class="tools-content">
+          
+          <!-- Tab Panel 1: Cover Letter (Default Active) -->
+          <div class="tab-panel active" id="panel-cover">
+            <div class="glass-card editor-card">
+              <div class="editor-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="display: flex; gap: 6px; margin-right: 12px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; display: block; opacity: 0.85;"></span>
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e; display: block; opacity: 0.85;"></span>
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #27c93f; display: block; opacity: 0.85;"></span>
+                  </div>
+                  <span class="material-symbols-outlined" style="color: var(--primary); font-size: 18px;">edit_note</span>
+                  <span class="font-label-md" style="font-weight: 700; color: #ffffff;">AI Generated Cover Letter</span>
+                </div>
+                <button class="btn-primary" id="copy-letter-btn" style="padding: 8px 16px;">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+                  <span>Copy Text</span>
+                </button>
+              </div>
+              <div class="editor-body">
+                <textarea class="letter-editor" id="cover-letter-text" spellcheck="false">Dear Hiring Manager,
+
+I am writing to express my strong interest in the Senior AI Product Designer position at Nexus Tech. With over six years of experience bridging the gap between complex machine learning architectures and intuitive user interfaces, I have consistently delivered products that prioritize both technical precision and human-centric accessibility.
+
+In my previous role at Quantam Dynamics, I spearheaded the design of an AI-driven analytics dashboard that increased user retention by 45%. I noticed Nexus Tech’s commitment to ethical AI implementation, a principle that aligns perfectly with my portfolio of work in transparent algorithmic design.
+
+Key highlights of my expertise include:
+• Developing fluid-fixed hybrid layouts for high-performance dashboards.
+• Implementing glassmorphic design systems that reduce cognitive load.
+• Collaborating closely with engineering teams to ensure pixel-perfect deployment.
+
+I am eager to bring my unique blend of aesthetic vision and technical understanding to the Nexus Tech team. Thank you for your time and consideration.
+
+Best regards,
+
+Alex Sterling</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Panel 2: LinkedIn Tips -->
+          <div class="tab-panel" id="panel-linkedin">
+            
+            <div class="tips-grid">
+              
+              <!-- Hook optimization card -->
+              <div class="glass-card tip-detail-card">
+                <div class="tip-card-header">
+                  <span class="material-symbols-outlined" style="color: var(--primary);">title</span>
+                  <span class="tag-label">Headline Hook</span>
+                </div>
+                <h3 class="font-label-md">Refine Your Hook</h3>
+                <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">
+                  Your current summary heading is generic. Swap it with a high-impact, value-oriented tag.
+                </p>
+                <div class="quote-box" id="linkedin-headline-val">
+                  "Senior Product Designer | Specializing in AI-Driven SaaS &amp; Human-Centric Systems"
+                </div>
+              </div>
+
+              <!-- Summary optimization card -->
+              <div class="glass-card tip-detail-card green">
+                <div class="tip-card-header">
+                  <span class="material-symbols-outlined" style="color: var(--secondary);">short_text</span>
+                  <span class="tag-label green">Summary Bio</span>
+                </div>
+                <h3 class="font-label-md">Narrative Summary</h3>
+                <p class="font-body-md text-on-surface-variant" style="margin-top: 4px;">
+                  Integrate structural metrics to your "About" section to boost recruitment SEO triggers.
+                </p>
+                <ul class="font-label-sm" style="list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                  <li style="display: flex; align-items: center; gap: 8px; color: var(--secondary);">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">check_circle</span> Mentioned 45% retention increase
+                  </li>
+                  <li style="display: flex; align-items: center; gap: 8px; color: var(--on-surface-variant);">
+                    <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline);">circle</span> Needs mention of Figma design tokens
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+
+            <!-- Profile Improvement Checklist -->
+            <div class="glass-card">
+              <h3 class="font-headline-md" style="margin-bottom: 20px;">Profile Improvement Checklist</h3>
+              <div class="checklist-container">
+                
+                <div class="checklist-item done" id="chk-item-avatar" style="cursor: pointer;">
+                  <div class="checklist-left">
+                    <div class="checkbox-visual"></div>
+                    <span class="font-body-md">Update profile avatar with professional studio lighting</span>
+                  </div>
+                  <span class="checklist-right done" id="chk-action-avatar">DONE</span>
+                </div>
+
+                <div class="checklist-item" id="chk-item-portfolio" style="cursor: pointer;">
+                  <div class="checklist-left">
+                    <div class="checkbox-visual"></div>
+                    <span class="font-body-md">Add a "Featured" section displaying latest design systems</span>
+                  </div>
+                  <span class="checklist-right action" id="chk-action-portfolio">OPTIMIZE NOW</span>
+                </div>
+
+                <div class="checklist-item" id="chk-item-work" style="cursor: pointer;">
+                  <div class="checklist-left">
+                    <div class="checkbox-visual"></div>
+                    <span class="font-body-md">Enable "Open to Work" filter restricted to specific recruiters</span>
+                  </div>
+                  <span class="checklist-right action" id="chk-action-work">SETUP</span>
+                </div>
+
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Tab Panel 3: Optimized Resume (Premium Pro) -->
+          <div class="tab-panel" id="panel-resume">
+            <div class="glass-card editor-card">
+              <div class="editor-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="display: flex; gap: 6px; margin-right: 12px;">
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f56; display: block; opacity: 0.85;"></span>
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #ffbd2e; display: block; opacity: 0.85;"></span>
+                    <span style="width: 10px; height: 10px; border-radius: 50%; background: #27c93f; display: block; opacity: 0.85;"></span>
+                  </div>
+                  <span class="material-symbols-outlined" style="color: var(--primary); font-size: 18px;">workspace_premium</span>
+                  <span class="font-label-md" style="font-weight: 700; color: #ffffff;">AI Optimized Resume (Premium Pro)</span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <button class="btn-secondary" id="copy-resume-btn" style="padding: 8px 16px;">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">content_copy</span>
+                    <span>Copy Text</span>
+                  </button>
+                  <div style="position: relative;" id="download-dropdown-container">
+                    <button class="btn-primary" id="download-resume-btn" style="padding: 8px 16px; display: flex; align-items: center; gap: 4px;">
+                      <span class="material-symbols-outlined" style="font-size: 16px;">download</span>
+                      <span>Download</span>
+                      <span class="material-symbols-outlined" style="font-size: 16px;">arrow_drop_down</span>
+                    </button>
+                    <!-- Download options dropdown -->
+                    <div class="download-dropdown glass-card" id="download-dropdown" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; width: 180px; z-index: 10; padding: 8px; flex-direction: column; gap: 4px; box-shadow: var(--shadow-md);">
+                      <div class="download-item" data-format="txt" style="display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.813rem; font-weight: 500;">
+                        <span class="material-symbols-outlined" style="font-size: 16px; color: var(--primary);">article</span> Plain Text (.txt)
+                      </div>
+                      <div class="download-item" data-format="md" style="display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.813rem; font-weight: 500;">
+                        <span class="material-symbols-outlined" style="font-size: 16px; color: var(--outline);">code</span> Markdown (.md)
+                      </div>
+                      <div class="download-item" data-format="html" style="display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.813rem; font-weight: 500;">
+                        <span class="material-symbols-outlined" style="font-size: 16px; color: var(--secondary);">html</span> Web Document (.html)
+                      </div>
+                      <div class="download-item" data-format="pdf" style="display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.813rem; font-weight: 500;">
+                        <span class="material-symbols-outlined" style="font-size: 16px; color: var(--error);">picture_as_pdf</span> PDF Document (.pdf)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="editor-body">
+                <textarea class="letter-editor" id="optimized-resume-text" spellcheck="false" style="font-family: 'Geist Mono', monospace; font-size: 0.813rem; line-height: 1.5; color: var(--on-surface-variant); height: 450px;">Please configure your Gemini API Key in Settings and click 'Optimize Now' to generate your fully refactored and optimized resume.</textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================== VIEW 4: RESUME ROASTER ==================== -->
+    <div class="view-panel" id="view-roaster" style="flex-direction: column; height: calc(100vh - 170px); margin-bottom: 80px;">
+      <!-- Back button and title -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-shrink: 0;">
+        <button class="btn-secondary" id="back-from-roaster-btn" style="padding: 10px 16px;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_back</span>
+          <span>Back to Optimizer</span>
+        </button>
+        <div class="badge-tag font-label-md" style="background-color: rgba(245, 158, 11, 0.1); color: var(--tertiary); margin: 0; display: flex; align-items: center; gap: 6px;">
+          <span class="material-symbols-outlined" style="font-size: 18px; color: #f59e0b;">local_fire_department</span>
+          <span>AI Resume Roaster Live Stream</span>
+        </div>
+      </div>
+
+      <!-- Window-in-Window Frame Container -->
+      <div id="roaster-frame-container" style="flex: 1; position: relative; border-radius: var(--radius-xl); overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); background: #000000; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);">
+        <!-- Loading indicator -->
+        <div id="roaster-iframe-loader" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: rgba(9, 9, 13, 0.95); z-index: 5;">
+          <div style="width: 45px; height: 45px; border: 3px solid rgba(245, 158, 11, 0.1); border-top-color: #f59e0b; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <p class="font-body-md" style="color: #f59e0b; font-weight: 600; font-family: 'Geist Mono', monospace; animation: pulseAnimation 1.5s infinite;">
+            Connecting to hosted Resume Roaster...
+          </p>
+        </div>
+        
+        <!-- Iframe -->
+        <iframe id="roaster-iframe" src="" style="width: 100%; height: 100%; border: none; display: block;" allow="clipboard-read; clipboard-write"></iframe>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Navigation Bar (Shared) -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-target="optimize">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+      <span>Optimize</span>
+    </a>
+    <a href="#" class="nav-item" data-target="analysis" id="bottom-nav-analysis" style="display: none;">
+      <span class="material-symbols-outlined">analytics</span>
+      <span>Analysis</span>
+    </a>
+    <a href="#" class="nav-item" data-target="tools">
+      <span class="material-symbols-outlined">construction</span>
+      <span>Tools</span>
+    </a>
+  </nav>
+
+  <!-- Contextual/Floating Action Button -->
+  <button class="fab" id="fab-help-btn" title="AI Assistant Chat">
+    <span class="material-symbols-outlined" style="font-size: 28px;">smart_toy</span>
+  </button>
+
+  <!-- AI Chat Drawer -->
+  <div class="chat-drawer" id="chat-drawer">
+    <div class="chat-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="material-symbols-outlined" style="color: var(--primary);">smart_toy</span>
+        <span class="font-label-md" style="font-weight: 700;">AI Resume Assistant</span>
+      </div>
+      <button id="close-chat-btn" style="border:none; background:transparent; padding:0; color:var(--on-surface-variant); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <div class="chat-message bot">
+        <p>Hi! I'm your AI Career Coach. Ask me anything about improving your resume, refining bullet points, or prepping for interviews.</p>
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off"/>
+      <button id="send-chat-btn">
+        <span class="material-symbols-outlined" style="font-size: 18px;">send</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Scanner Screen -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="scanner-container">
+      <div class="radar-glow"></div>
+      <div class="scanner-doc">
+        <span class="material-symbols-outlined scanner-icon">description</span>
+        <div class="scan-laser"></div>
+      </div>
+    </div>
+    <div class="scanner-text-wrapper">
+      <h3 class="font-headline-md scanner-title">ATS Deep Scanning...</h3>
+      <p class="font-body-md scanner-subtitle" id="scanner-status">Analyzing resume syntax...</p>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="notification-toast">Text copied to clipboard!</div>
+
+  <!-- App Script -->
+
+</body>
+</html>
