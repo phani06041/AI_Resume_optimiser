@@ -284,6 +284,25 @@ window.addEventListener("click", (e) => {
   }
 });
 
+// Navigate to Tools Tab from Analysis page
+const goToToolsCta = document.getElementById("go-to-tools-cta");
+if (goToToolsCta) {
+  goToToolsCta.addEventListener("click", () => {
+    switchView("tools");
+    switchToolsTab("resume");
+    showToast("Welcome to your tailored workspace!");
+  });
+}
+
+const keywordsHelpBtn = document.getElementById("keywords-help-btn");
+if (keywordsHelpBtn) {
+  keywordsHelpBtn.addEventListener("click", () => {
+    switchView("tools");
+    switchToolsTab("resume");
+    showToast("Review where keywords were integrated!");
+  });
+}
+
 // ==================== CLIENT-SIDE RESUME PARSING ====================
 
 
