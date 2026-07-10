@@ -234,44 +234,52 @@ updateAtsScore(state.currentScore);
 
 // ==================== PROFILE DROPDOWN MANAGEMENT ====================
 
-dom.avatarBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dom.profileDropdown.classList.toggle("active");
-  dom.settingsModal.classList.remove("active"); // close settings modal if open
-});
-
-dom.dropdownProplanTrigger.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dom.profileDropdown.classList.remove("active");
-  switchView("tools");
-  switchToolsTab("resume");
-  showToast("Welcome to your Premium Pro Optimized Resume panel!");
-});
-
-dom.dropdownSettingsTrigger.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dom.profileDropdown.classList.remove("active");
-  dom.settingsModal.classList.add("active");
-  initSettings();
-});
-
-dom.dropdownSignoutTrigger.addEventListener("click", (e) => {
-  e.stopPropagation();
-  dom.profileDropdown.classList.remove("active");
-  localStorage.removeItem("gemini_api_key");
-  state.apiKey = "";
-  initSettings();
-  showToast("Signed out. Saved configuration cleared.");
-});
+if (dom.avatarBtn && dom.profileDropdown) {
+  dom.avatarBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dom.profileDropdown.classList.toggle("active");
+    dom.settingsModal.classList.remove("active"); // close settings modal if open
+  });
+  
+  if (dom.dropdownProplanTrigger) {
+    dom.dropdownProplanTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dom.profileDropdown.classList.remove("active");
+      switchView("tools");
+      switchToolsTab("resume");
+      showToast("Welcome to your Premium Pro Optimized Resume panel!");
+    });
+  }
+  
+  if (dom.dropdownSettingsTrigger) {
+    dom.dropdownSettingsTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dom.profileDropdown.classList.remove("active");
+      dom.settingsModal.classList.add("active");
+      initSettings();
+    });
+  }
+  
+  if (dom.dropdownSignoutTrigger) {
+    dom.dropdownSignoutTrigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dom.profileDropdown.classList.remove("active");
+      localStorage.removeItem("gemini_api_key");
+      state.apiKey = "";
+      initSettings();
+      showToast("Signed out. Saved configuration cleared.");
+    });
+  }
+}
 
 // Click outside to dismiss dropdowns
 window.addEventListener("click", (e) => {
   // Dismiss profile dropdown
-  if (dom.profileDropdown.classList.contains("active") && !dom.profileDropdown.contains(e.target) && !dom.avatarBtn.contains(e.target)) {
+  if (dom.profileDropdown && dom.avatarBtn && dom.profileDropdown.classList.contains("active") && !dom.profileDropdown.contains(e.target) && !dom.avatarBtn.contains(e.target)) {
     dom.profileDropdown.classList.remove("active");
   }
   // Dismiss settings modal
-  if (dom.settingsModal.classList.contains("active") && e.target === dom.settingsModal) {
+  if (dom.settingsModal && dom.settingsModal.classList.contains("active") && e.target === dom.settingsModal) {
     dom.settingsModal.classList.remove("active");
   }
 });
