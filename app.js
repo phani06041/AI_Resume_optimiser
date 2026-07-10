@@ -1401,6 +1401,37 @@ dom.backFromRoasterBtn.addEventListener("click", () => {
   switchView("optimize");
 });
 
+// ==================== ROAST SUGGESTION POPUP ====================
+
+const roastPopup = document.getElementById("roast-suggestion-popup");
+const popupRoastBtn = document.getElementById("popup-roast-btn");
+const popupCloseBtn = document.getElementById("popup-close-btn");
+
+if (roastPopup) {
+  // Show popup after 3.5 seconds if not previously dismissed
+  setTimeout(() => {
+    if (!localStorage.getItem("roast_suggestion_dismissed")) {
+      roastPopup.classList.add("show");
+    }
+  }, 3500);
+
+  popupCloseBtn.addEventListener("click", () => {
+    roastPopup.classList.remove("show");
+    localStorage.setItem("roast_suggestion_dismissed", "true");
+  });
+
+  popupRoastBtn.addEventListener("click", () => {
+    roastPopup.classList.remove("show");
+    localStorage.setItem("roast_suggestion_dismissed", "true");
+    
+    // Switch viewport to roaster automatically
+    const roasterBtn = document.getElementById("roast-trigger-btn");
+    if (roasterBtn) {
+      roasterBtn.click();
+    }
+  });
+}
+
 // ==================== GENERAL UTILITIES ====================
 
 function showToast(message) {

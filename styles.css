@@ -1731,3 +1731,36 @@ nav.bottom-nav {
 }#view-roaster.active {
   display: flex !important;
 }
+
+/* Floating Roast Suggestion Popup */
+.floating-suggestion-popup {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: 320px;
+  padding: 16px;
+  background: rgba(9, 9, 13, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
+  z-index: 999;
+  border-radius: var(--radius-lg);
+  transform: translateY(150px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.floating-suggestion-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.roast-fire-icon {
+  color: #ef4444;
+  font-size: 24px;
+  animation: firePulse 1.5s infinite alternate;
+}
+
+@keyframes firePulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4)); }
+  100% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8)); }
+}
